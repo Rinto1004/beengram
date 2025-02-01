@@ -24,6 +24,10 @@ from .forms import (
     CommentForm,
 )
 from .models import Post,Comment
+import PIL, os, io
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+
 
 User = get_user_model()
 
@@ -115,6 +119,43 @@ class PostView(LoginRequiredMixin, CreateView):
         self.object.user = self.request.user
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+    
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+
+        # 投稿された画像データを取得
+        image = PIL.Image.open(self.request.FILES['img']).convert('RGB')
+
+        # 縦か横の長い方の辺の長さを取得
+        long_side = max(image.size[0], image.size[1])
+        # 長編が1920pxより長ければ、1920pxに圧縮
+        if long_side > 1920:
+            resize_ratio = max(image.size[0] / 1920, image.size[1] / 1920)
+            image = image.resize((
+                int(image.size[0] / resize_ratio),
+                int(image.size[1] / resize_ratio)
+            ))
+
+        image_io = io.BytesIO()
+        image.save(image_io, format="JPEG")
+        # 画像データの保存先を取得
+        save_path = "media/" + str(self.request.FILES['img'])
+        # 画像オブジェクトから、ImageFieldへの保存に適した型へ変換
+        image_file = InMemoryUploadedFile(
+            image_io,
+            field_name = None,
+            name = save_path,
+            content_type = "image/jpeg",
+            size = image_io.getbuffer().nbytes,
+            charset = None,
+        )
+
+        self.object.img = image_file
+        self.object.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
