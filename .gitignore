@@ -15,3 +15,10 @@ media/posts/*
 
 .DS_Store
 .env
+
+.venv/
+__pycache__/
+local_settings.py
+staticfiles/
+db.sqlite3
+.DS_Store

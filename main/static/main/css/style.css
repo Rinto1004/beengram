@@ -448,6 +448,11 @@ a.profile-counter {
     padding: 0;
     margin: 0;
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .post-grid__item {
@@ -457,5 +462,16 @@ a.profile-counter {
 
 .post-grid__item img {
     display: block;
-    width: 100%;
+    width: calc(100% / 3);
+    flex: o o auto;
+}
+
+.post__comment {
+    font-size: 32px;
+    margin: 0 16px;
+}
+
+.post__comment a {
+    color: inherit;
+    text-decoration: none;
 }

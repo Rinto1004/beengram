@@ -31,3 +31,24 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.user.username} : {self.post_date}"
+    
+class Comment(models.Model):
+    user = models.ForeignKey(
+        "User", on_delete=models.CASCADE, related_name="comments"
+    )
+    post = models.ForeignKey(
+        "Post", on_delete=models.CASCADE, related_name="comments"
+    )
+    text = models.CharField(max_length=150)
+    post_date = models.DateTimeField(auto_now_add=True)
+    is_anonymous = models.BooleanField(default=False)
+
+    def get_username(self):
+        if self.is_anonymous:
+            return "匿名ユーザー"
+        return self.user.username 
+
+
+    def __str__(self):
+        return f"{self.user.username} → ({self.post}) : {self.post_date}"
+

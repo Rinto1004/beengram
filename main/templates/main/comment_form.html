@@ -1,0 +1,21 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+
+<form action="", method="POST" class="form">
+    {% csrf_token %}
+    <div class="form-field">
+        {{ form.text }}
+    </div>
+    <div class="form-field">
+        {{ form.is_anonymous.label_tag }}
+        {{ form.is_anonymous }}
+    </div>
+    <div class="form-field form-field--submit">
+        <button type="submit" class="round-button">コメント</button>
+    </div>
+</form>
+
+{% endblock %}
+
+

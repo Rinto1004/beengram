@@ -147,3 +147,10 @@ try:
     from .local_settings import *
 except ImportError:
     pass
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
